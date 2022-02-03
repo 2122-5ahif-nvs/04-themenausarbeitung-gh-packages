@@ -1,19 +1,12 @@
-# asciidoctor-docker-slides
+# GitHub Packages (Images) 
+Presentation by Benjamin Besic
 
-create asciidoctor slides w/o installing any software on your computer besides docker
+# Documentation
 
-* github-repo: https://github.com/htl-leonding-college/asciidoctor-docker-slides
-* Demo from bentolor hosted in gh-pages of this repo: https://htl-leonding-college.github.io/asciidoctor-docker-slides/docs/presentation.html
-* Simple Demo, also hosted in the gh-pages of this repo: https://htl-leonding-college.github.io/asciidoctor-docker-slides
+[Documentation for GitHub Packages](https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages/tree/main/documentation/gh-packages-documentation.adoc)
 
+# Slides 
+[Presentation Slides](https://2122-5ahif-nvs.github.io/04-themenausarbeitung-gh-packages)
 
-##  Use Case
-
-* Create slides with Asciidoctor.
-* Render it to revealjs in a docker container
-
-## Sources
-
-* [Asciidoctor reveal.js](https://asciidoctor.org/docs/asciidoctor-revealjs/)
-* [Demo from Benjamin Schmid - Source](https://github.com/bentolor/java9to13)
-* [Demo from Benjamin Schmid - Presentation](https://bentolor.github.io/java9to13/)
+# Project
+[Sample Quarkus Project](https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages/tree/main/project)

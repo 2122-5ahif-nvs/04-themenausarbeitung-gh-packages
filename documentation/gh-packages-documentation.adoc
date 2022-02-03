@@ -1,0 +1,80 @@
+= GitHub Packages Documentation
+Benjamin Besic
+:icons: font
+:sectnums:
+:toc: left
+:iconfont-cdn: path/to/fontawesome.css
+:imagesdir: images
+
+ifdef::backend-html5[]
+icon:file-text-o[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages/tree/main/documentation/gh-packages-documentation.adoc]  ‏ ‏ ‎
+icon:github-square[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages.git]  ‏ ‏ ‎
+icon:home[link=https://2122-5ahif-nvs.github.io/04-themenausarbeitung-gh-packages/]  ‏ ‏ ‎
+endif::backend-html5[]
+
+== GitHub Container Registry
+Quick Introduction: +
+https://github.blog/2020-09-01-introducing-github-container-registry[Cotainer Registry Docker Images]
+
+== Publishing your Image manually
+=== Authenticate with Docker
+
+First, you have to log into Docker with your Github-Credentials.
+[source,bash]
+----
+docker login ghcr.io -u <github_username> --password
+----
+Afterwards, you will be asked to type in your password (github-token).
+
+=== Build your image
+The next step is to build your desired docker image. +
+CAUTION: The image tagging is very important in this step!
+
+This is what the image tag should look like:
+[source,text]
+----
+ghcr.io/<gh_repository_owner>/<image_name>:<version>
+----
+
+Example:
+[source,text]
+----
+ghcr.io/musikfreunde/leocode-backend:26.0
+----
+musikfreunde -> Repository owner, either a team or a user +
+ghcr.io -> github-container registry url +
+leocode-backend:26.0 -> The image name and version
+
+Building the image:
+[source,bash]
+----
+docker build -t ghcr.io/musikfreunde/leocode-backend:26.0 . <1>
+----
+<1> You can either name the image directly or tag it later.
+
+=== Publish your image
+The last step is to actually publish your image to the registry.
+[source,bash]
+----
+docker push ghcr.io/musikfreunde/leocode-backend:26.0
+----
+
+=== Your github packages
+Now the package should be visible in your packages tab.
+
+image::packages_team.png[]
+
+In the package view you can make all your necessary settings like: +
+
+* assign a repository to your package
+* make the package public/private
+* ...
+
+image::package_single_view.png[]
+
+
+After assigning a repository to your package you now can view it on the repo page:
+
+image::packages-side-view.png[]
+
+== Publishing your Image with GitHub-Workflow/Actions
