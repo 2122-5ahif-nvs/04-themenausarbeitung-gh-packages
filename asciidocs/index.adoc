@@ -1,4 +1,4 @@
-= GitHub Packages Documentation
+= Publishing GitHub Packages (Docker Images)
 Benjamin Besic
 :icons: font
 :sectnums:
@@ -12,9 +12,26 @@ icon:github-square[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-
 icon:home[link=https://2122-5ahif-nvs.github.io/04-themenausarbeitung-gh-packages/]  ‏ ‏ ‎
 endif::backend-html5[]
 
+== GitHub Packages
+=== Quick Introduction:
+
+https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages[GitHub Packages]
+
+=== Information
+GitHub Packages is a software package hosting service.
+It allows you to publish your software publicly or privately. +
+
+When using GitHub Packages you can integrate your software code and also the actual packages, to run the software in your GitHub Repository.
+Just like that you have everything accessible in one place on GitHub.
+
 == GitHub Container Registry
-Quick Introduction: +
-https://github.blog/2020-09-01-introducing-github-container-registry[Cotainer Registry Docker Images]
+
+=== Quick Introduction:
+https://github.blog/2020-09-01-introducing-github-container-registry[Cotainer Registry Docker Images] +
+
+=== Information
+The GitHub Container Registry contains your published docker image packages. +
+It functions like DockerHub, but it offers functionality to integrate the images into your GitHub repository.
 
 == Publishing your Image manually
 === Authenticate with Docker
