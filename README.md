@@ -9,4 +9,5 @@ Presentation by Benjamin Besic
 [Presentation Slides](https://zbenii.github.io/gh-package-docker-image-demo/)
 
 # Project
-[Sample Quarkus Project](https://github.com/zbenii/gh-package-docker-image-demo/tree/main/project)
+The project used for this presentation is my diploma thesis project.  
+[Quarkus/Vue.js Project](https://github.com/Musikfreunde/eazy-menue)

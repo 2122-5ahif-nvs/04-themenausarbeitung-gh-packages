@@ -7,15 +7,15 @@ Benjamin Besic
 :imagesdir: images
 
 ifdef::backend-html5[]
-icon:file-text-o[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages/tree/main/documentation/gh-packages-documentation.adoc]  ‏ ‏ ‎
-icon:github-square[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages.git]  ‏ ‏ ‎
-icon:home[link=https://2122-5ahif-nvs.github.io/04-themenausarbeitung-gh-packages/]  ‏ ‏ ‎
+icon:file-text-o[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages-docker-image/tree/main/documentation/gh-packages-documentation.adoc]  ‏ ‏ ‎
+icon:github-square[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages-docker-image.git]  ‏ ‏ ‎
+icon:home[link=https://2122-5ahif-nvs.github.io/04-themenausarbeitung-gh-packages-docker-image/]  ‏ ‏ ‎
 endif::backend-html5[]
 
 == GitHub Packages
 === Quick Introduction:
 
-https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages[GitHub Packages]
+TIP: https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages[GitHub Packages]
 
 === Information
 GitHub Packages is a software package hosting service.
@@ -27,7 +27,7 @@ Just like that you have everything accessible in one place on GitHub.
 == GitHub Container Registry
 
 === Quick Introduction:
-https://github.blog/2020-09-01-introducing-github-container-registry[Cotainer Registry Docker Images] +
+TIP: https://github.blog/2020-09-01-introducing-github-container-registry[Cotainer Registry Docker Images] +
 
 === Information
 The GitHub Container Registry contains your published docker image packages. +
@@ -45,7 +45,8 @@ Afterwards, you will be asked to type in your password (github-token).
 
 === Build your image
 The next step is to build your desired docker image. +
-CAUTION: The image tagging is very important in this step!
+
+IMPORTANT: The image tagging is very important in this step!
 
 This is what the image tag should look like:
 [source,text]
@@ -75,11 +76,137 @@ The last step is to actually publish your image to the registry.
 ----
 docker push ghcr.io/musikfreunde/leocode-backend:26.0
 ----
+== Publishing your Image with GitHub-Workflow/Actions
+This way to publish is much more comfortable and allows you to test the image changes you made to the repo almost instantly after pushing them.
 
-=== Your github packages
-Now the package should be visible in your packages tab.
+TIP: https://github.com/Musikfreunde/eazy-menue[Project used for this tutorial]
 
+=== Create a Repository Secret
+The repository secret is needed, so that GitHub Actions can login to your GitHub Account.
+The secret value is one of your GitHub Login Tokens.
+
+.GH_TOKEN secret with your login token
+image::repo-secret.png[]
+
+=== Create a Workflow File
+CAUTION: Github Actions should be enabled by default, if not check in the Actions Tab in your Repo settings.
+
+* [*] Create a .github/workflows directory, if not present.
+
+image::github-workflow-folder.png[]
+
+* [*] Create a .yml file inside it
+
+image::github-workflow-yml-file.png[]
+
+=== The .yml File
+
+[source,yaml]
+----
+# This is a basic workflow to help you get started with Actions
+
+name: Publish EazyMenue Frontend and Backend
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: ['main']
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build_backend:
+    name: Build backend
+    runs-on: ubuntu-latest <8>
+    env:
+      IMAGE_NAME: eazy-menue-backend <1>
+    defaults:
+      run:
+        working-directory: ./eazy-menue-backend <2>
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2 <3>
+      - name: Package
+        run: mvn package -DskipTests
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }} <4>
+      - name: Build image
+        run: docker build . -f src/main/docker/Dockerfile.jvm --tag $IMAGE_NAME <5>
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]') <6>
+          VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION <7>
+  build_frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: eazy-menue-frontend
+    defaults:
+      run:
+        working-directory: ./eazymenu-frontend
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+      - name: Build image
+        run: docker build . --tag $IMAGE_NAME
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+----
+<1> This represents your desired name of the docker image
+<2> The working directory is where all the steps run, it represents a directory inside your repository. +
+In my case there is a quarkus project inside this directory.
+<3> This step clones your GitHub Repository to the build container.
+<4> In this step your login token is used to log in into the GitHub Container Registry.
+<5> This step builds your desired docker image, preferably with a Dockerfile.
+<6> In this step your Container Registry image name gets created like we did in the manual tutorial.
+<7> The last step pushes the image to the registry, where now it will be accessible within you GitHub Repository.
+<8> This decides which virtual container gets used to build your image.
+
+== Pushing to your GitHub Repository
+In my case everytime I push onto the main branch the Workflow gets executed.
+
+It should look like this:
+
+.GitHub Actions tab within your repo
+image::actions-tab-repo.png[]
+
+When it's done:
+
+.Succesful Actions Run
+image::action-run-done.png[]
+
+== Your published GitHub Packages
+Now the packages should be visible in your packages tab.
+
+.Packages Summary
 image::packages_team.png[]
+
+.Package Single View
+image::package_single_view.png[]
+
+=== Settings
 
 In the package view you can make all your necessary settings like: +
 
@@ -87,11 +214,17 @@ In the package view you can make all your necessary settings like: +
 * make the package public/private
 * ...
 
-image::package_single_view.png[]
+.Screenshots
+[%collapsible]
+====
+.Adding a Repository to your package
+image::package-settings-repo.png[]
 
+.Package visibility and access
+image::package-settings-visibility.png[]
+====
 
 After assigning a repository to your package you now can view it on the repo page:
 
+.Repository Sideview
 image::packages-side-view.png[]
-
-== Publishing your Image with GitHub-Workflow/Actions
