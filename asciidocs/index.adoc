@@ -3,11 +3,10 @@ Benjamin Besic
 :icons: font
 :sectnums:
 :toc: left
-:iconfont-cdn: path/to/fontawesome.css
 :imagesdir: images
 
 ifdef::backend-html5[]
-icon:file-text-o[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages-docker-image/tree/main/documentation/gh-packages-documentation.adoc]  ‏ ‏ ‎
+icon:file-text-o[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages-docker-image/blob/main/asciidocs/index.adoc]  ‏ ‏ ‎
 icon:github-square[link=https://github.com/2122-5ahif-nvs/04-themenausarbeitung-gh-packages-docker-image.git]  ‏ ‏ ‎
 icon:home[link=https://2122-5ahif-nvs.github.io/04-themenausarbeitung-gh-packages-docker-image/]  ‏ ‏ ‎
 endif::backend-html5[]
@@ -85,11 +84,15 @@ TIP: https://github.com/Musikfreunde/eazy-menue[Project used for this tutorial]
 The repository secret is needed, so that GitHub Actions can login to your GitHub Account.
 The secret value is one of your GitHub Login Tokens.
 
+.How to create a repository secret
+[%collapsible]
+====
 .GH_TOKEN secret with your login token
 image::repo-secret.png[]
+====
 
 === Create a Workflow File
-CAUTION: Github Actions should be enabled by default, if not check in the Actions Tab in your Repo settings.
+CAUTION: Github Actions should be enabled by default, if not check in the Actions tab in your Repo settings.
 
 * [*] Create a .github/workflows directory, if not present.
 
@@ -185,7 +188,7 @@ In my case there is a quarkus project inside this directory.
 <8> This decides which virtual container gets used to build your image.
 
 == Pushing to your GitHub Repository
-In my case everytime I push onto the main branch the Workflow gets executed.
+In my case everytime I push onto the main branch the workflow gets executed.
 
 It should look like this:
 
@@ -200,11 +203,15 @@ image::action-run-done.png[]
 == Your published GitHub Packages
 Now the packages should be visible in your packages tab.
 
+.Screenshots
+[%collapsible]
+====
 .Packages Summary
 image::packages_team.png[]
 
 .Package Single View
 image::package_single_view.png[]
+====
 
 === Settings
 
